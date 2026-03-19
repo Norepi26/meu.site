@@ -1,80 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Norepi AI</title>
-
-<style>
-body {
-  background: black;
-  color: white;
-  font-family: Arial;
-  text-align: center;
-}
-
-textarea {
-  width: 80%;
-  height: 120px;
-  background: #111;
-  color: white;
-  border: none;
-  padding: 10px;
-}
-
-button {
-  margin-top: 10px;
-  padding: 15px;
-  background: linear-gradient(red, orange);
-  border: none;
-  color: white;
-  cursor: pointer;
-}
-</style>
+<title>Teste</title>
 </head>
+<body style="background:black; color:white; text-align:center;">
 
-<body>
+<h1>FUNCIONOU 🚀</h1>
 
-<h1>Norepi AI</h1>
+<button onclick="teste()">Clica aqui</button>
 
-<textarea id="input" placeholder="Write text..."></textarea><br>
-
-<button onclick="improve()">Improve</button>
-
-<p id="output"></p>
-
-<h2>Plans</h2>
-
-<button onclick="buy()">Upgrade to Pro</button>
+<p id="res"></p>
 
 <script>
-async function improve() {
-  let text = document.getElementById("input").value;
-
-  document.getElementById("output").innerText = "Thinking...";
-
-  const res = await fetch("https://api.openai.com/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Authorization": "Bearer SUA_API_KEY",
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      model: "gpt-4o-mini",
-      messages: [
-        { role: "system", content: "Rewrite text in a better way, always different." },
-        { role: "user", content: text }
-      ]
-    })
-  });
-
-  const data = await res.json();
-
-  document.getElementById("output").innerText =
-    data.choices[0].message.content;
-}
-
-function buy() {
-  window.location.href = "SEU_LINK_STRIPE";
+function teste() {
+  document.getElementById("res").innerText = "Tá funcionando!";
 }
 </script>
 
