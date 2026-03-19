@@ -1,117 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Norepi AI</title>
-
-<style>
-body {
-  background: #000;
-  color: white;
-  font-family: Arial;
-  text-align: center;
-}
-
-h1 {
-  margin-top: 60px;
-  font-size: 50px;
-}
-
-.gradient {
-  background: linear-gradient(90deg, red, orange);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-textarea {
-  width: 80%;
-  max-width: 500px;
-  height: 120px;
-  background: #111;
-  border: none;
-  color: white;
-  padding: 15px;
-  border-radius: 10px;
-}
-
-button {
-  margin-top: 15px;
-  padding: 15px 30px;
-  border: none;
-  border-radius: 10px;
-  background: linear-gradient(90deg, red, orange);
-  color: white;
-  cursor: pointer;
-}
-
-.card {
-  background: #111;
-  padding: 20px;
-  margin: 20px auto;
-  width: 250px;
-  border-radius: 10px;
-}
-
-footer {
-  margin-top: 100px;
-  opacity: 0.4;
-}
-</style>
-</head>
-
-<body>
-
-<h1><span class="gradient">Norepi AI</span></h1>
-
-<p>Improve your text instantly</p>
-
-<textarea id="input" placeholder="Write your text..."></textarea>
-<br>
-<button onclick="improve()">Improve Text</button>
-
-<p id="output"></p>
-
-<h2>Plans</h2>
-
-<div class="card">
-  <h3>Free</h3>
-  <p>3 uses only</p>
-</div>
-
-<div class="card">
-  <h3>Pro</h3>
-  <p>$29/month</p>
-  <button onclick="buy()">Subscribe</button>
-</div>
-
-<footer>© 2026 Norepi. All rights reserved.</footer>
-
 <script>
-let uses = localStorage.getItem("uses") || 0;
-let isPro = localStorage.getItem("pro") || false;
+const styles = [
+  "Make this more professional:",
+  "Rewrite this in a persuasive way:",
+  "Improve this text with better wording:",
+  "Make this sound more powerful:",
+  "Rewrite this like a high-level copywriter:"
+];
 
 function improve() {
   let text = document.getElementById("input").value;
 
+  let uses = localStorage.getItem("uses") || 0;
+  let isPro = localStorage.getItem("pro") === "true";
+
   if (!isPro && uses >= 3) {
-    alert("Limit reached! Upgrade to Pro.");
+    alert("Limit reached. Upgrade to Pro.");
     return;
   }
 
-  let improved = "🔥 " + text + " (improved version)";
+  let randomStyle = styles[Math.floor(Math.random() * styles.length)];
+
+  let improved = randomStyle + "\n\n" + text + " 🚀 (enhanced version with better structure and impact)";
+
   document.getElementById("output").innerText = improved;
 
   uses++;
   localStorage.setItem("uses", uses);
 }
-
-function buy() {
-  // SIMULA COMPRA (depois conecta com Stripe)
-  localStorage.setItem("pro", true);
-  alert("You are now PRO 🚀");
-}
 </script>
-
-</body>
-</html>
