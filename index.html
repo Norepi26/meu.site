@@ -6,79 +6,27 @@
 <title>Norepi AI</title>
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-}
-
 body {
   background: #000;
   color: white;
-  overflow-x: hidden;
-}
-
-/* GLOW BACKGROUND */
-.glow {
-  position: absolute;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(255,80,0,0.5), transparent);
-  top: -200px;
-  left: 50%;
-  transform: translateX(-50%);
-  filter: blur(120px);
-}
-
-/* NAV */
-nav {
-  display: flex;
-  justify-content: space-between;
-  padding: 25px 60px;
-}
-
-.logo {
-  font-weight: bold;
-  font-size: 20px;
-  letter-spacing: 2px;
-}
-
-.menu {
-  opacity: 0.7;
-}
-
-/* HERO */
-.hero {
+  font-family: Arial;
   text-align: center;
-  margin-top: 120px;
 }
 
-.hero h1 {
-  font-size: 70px;
-  line-height: 1.1;
+h1 {
+  margin-top: 60px;
+  font-size: 50px;
 }
 
 .gradient {
-  background: linear-gradient(90deg, #ff3c00, #ff9500);
+  background: linear-gradient(90deg, red, orange);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.hero p {
-  margin-top: 20px;
-  opacity: 0.6;
-}
-
-/* INPUT BOX */
-.box {
-  margin-top: 50px;
-  display: flex;
-  justify-content: center;
-}
-
 textarea {
-  width: 500px;
+  width: 80%;
+  max-width: 500px;
   height: 120px;
   background: #111;
   border: none;
@@ -88,102 +36,80 @@ textarea {
 }
 
 button {
-  margin-left: 10px;
-  padding: 15px 25px;
+  margin-top: 15px;
+  padding: 15px 30px;
   border: none;
   border-radius: 10px;
-  background: linear-gradient(90deg, #ff3c00, #ff9500);
+  background: linear-gradient(90deg, red, orange);
   color: white;
   cursor: pointer;
 }
 
-/* RESULT */
-.result {
-  margin-top: 30px;
-  opacity: 0.8;
-}
-
-/* PRICING */
-.pricing {
-  margin-top: 120px;
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-}
-
 .card {
   background: #111;
-  padding: 30px;
-  border-radius: 15px;
-  width: 260px;
-  text-align: center;
+  padding: 20px;
+  margin: 20px auto;
+  width: 250px;
+  border-radius: 10px;
 }
 
-.price {
-  font-size: 30px;
-  margin: 20px 0;
-}
-
-/* FOOTER */
 footer {
-  margin-top: 150px;
-  text-align: center;
+  margin-top: 100px;
   opacity: 0.4;
-  padding: 40px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="glow"></div>
+<h1><span class="gradient">Norepi AI</span></h1>
 
-<nav>
-  <div class="logo">NOREPI</div>
-  <div class="menu">Product • Pricing • About</div>
-</nav>
+<p>Improve your text instantly</p>
 
-<div class="hero">
-  <h1>
-    <span class="gradient">AI Text</span><br>
-    Improver
-  </h1>
-  <p>Turn your basic text into powerful writing instantly.</p>
+<textarea id="input" placeholder="Write your text..."></textarea>
+<br>
+<button onclick="improve()">Improve Text</button>
 
-  <div class="box">
-    <textarea id="input" placeholder="Write something..."></textarea>
-    <button onclick="improve()">Improve</button>
-  </div>
+<p id="output"></p>
 
-  <div class="result" id="output"></div>
+<h2>Plans</h2>
+
+<div class="card">
+  <h3>Free</h3>
+  <p>3 uses only</p>
 </div>
 
-<div class="pricing">
-  <div class="card">
-    <h3>Free</h3>
-    <div class="price">$0</div>
-    <p>Limited usage</p>
-  </div>
-
-  <div class="card">
-    <h3>Pro</h3>
-    <div class="price">$29/mo</div>
-    <p>Unlimited access</p>
-    <button>Subscribe</button>
-  </div>
+<div class="card">
+  <h3>Pro</h3>
+  <p>$29/month</p>
+  <button onclick="buy()">Subscribe</button>
 </div>
 
-<footer>
-  © 2026 Norepi. All rights reserved.
-</footer>
+<footer>© 2026 Norepi. All rights reserved.</footer>
 
 <script>
+let uses = localStorage.getItem("uses") || 0;
+let isPro = localStorage.getItem("pro") || false;
+
 function improve() {
   let text = document.getElementById("input").value;
 
-  let improved = "✨ " + text.toUpperCase() + " — now sounds more powerful and professional.";
+  if (!isPro && uses >= 3) {
+    alert("Limit reached! Upgrade to Pro.");
+    return;
+  }
 
+  let improved = "🔥 " + text + " (improved version)";
   document.getElementById("output").innerText = improved;
+
+  uses++;
+  localStorage.setItem("uses", uses);
+}
+
+function buy() {
+  // SIMULA COMPRA (depois conecta com Stripe)
+  localStorage.setItem("pro", true);
+  alert("You are now PRO 🚀");
 }
 </script>
 
