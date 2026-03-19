@@ -2,18 +2,190 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Norepi AI</title>
 
 <style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
 body {
-  background: black;
+  background: #000;
   color: white;
-  font-family: Arial;
+  overflow-x: hidden;
+}
+
+/* GLOW BACKGROUND */
+.glow {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(255,80,0,0.5), transparent);
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  filter: blur(120px);
+}
+
+/* NAV */
+nav {
+  display: flex;
+  justify-content: space-between;
+  padding: 25px 60px;
+}
+
+.logo {
+  font-weight: bold;
+  font-size: 20px;
+  letter-spacing: 2px;
+}
+
+.menu {
+  opacity: 0.7;
+}
+
+/* HERO */
+.hero {
+  text-align: center;
+  margin-top: 120px;
+}
+
+.hero h1 {
+  font-size: 70px;
+  line-height: 1.1;
+}
+
+.gradient {
+  background: linear-gradient(90deg, #ff3c00, #ff9500);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero p {
+  margin-top: 20px;
+  opacity: 0.6;
+}
+
+/* INPUT BOX */
+.box {
+  margin-top: 50px;
+  display: flex;
+  justify-content: center;
+}
+
+textarea {
+  width: 500px;
+  height: 120px;
+  background: #111;
+  border: none;
+  color: white;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+button {
+  margin-left: 10px;
+  padding: 15px 25px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #ff3c00, #ff9500);
+  color: white;
+  cursor: pointer;
+}
+
+/* RESULT */
+.result {
+  margin-top: 30px;
+  opacity: 0.8;
+}
+
+/* PRICING */
+.pricing {
+  margin-top: 120px;
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+
+.card {
+  background: #111;
+  padding: 30px;
+  border-radius: 15px;
+  width: 260px;
   text-align: center;
 }
 
-h1 {
-  margin-top: 50px;
+.price {
+  font-size: 30px;
+  margin: 20px 0;
 }
 
-textarea
+/* FOOTER */
+footer {
+  margin-top: 150px;
+  text-align: center;
+  opacity: 0.4;
+  padding: 40px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="glow"></div>
+
+<nav>
+  <div class="logo">NOREPI</div>
+  <div class="menu">Product • Pricing • About</div>
+</nav>
+
+<div class="hero">
+  <h1>
+    <span class="gradient">AI Text</span><br>
+    Improver
+  </h1>
+  <p>Turn your basic text into powerful writing instantly.</p>
+
+  <div class="box">
+    <textarea id="input" placeholder="Write something..."></textarea>
+    <button onclick="improve()">Improve</button>
+  </div>
+
+  <div class="result" id="output"></div>
+</div>
+
+<div class="pricing">
+  <div class="card">
+    <h3>Free</h3>
+    <div class="price">$0</div>
+    <p>Limited usage</p>
+  </div>
+
+  <div class="card">
+    <h3>Pro</h3>
+    <div class="price">$29/mo</div>
+    <p>Unlimited access</p>
+    <button>Subscribe</button>
+  </div>
+</div>
+
+<footer>
+  © 2026 Norepi. All rights reserved.
+</footer>
+
+<script>
+function improve() {
+  let text = document.getElementById("input").value;
+
+  let improved = "✨ " + text.toUpperCase() + " — now sounds more powerful and professional.";
+
+  document.getElementById("output").innerText = improved;
+}
+</script>
+
+</body>
+</html>
