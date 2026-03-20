@@ -3,98 +3,218 @@
 <head>
 <meta charset="UTF-8">
 <title>Norepi AI</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <style>
-body {background:#000;color:white;text-align:center;font-family:sans-serif;}
-textarea {width:80%;height:120px;background:#111;color:white;border:none;}
-button {margin-top:10px;padding:12px;background:linear-gradient(red,orange);border:none;color:white;}
-.lock {position:fixed;top:0;left:0;width:100%;height:100%;background:black;display:none;justify-content:center;align-items:center;flex-direction:column;}
+body{
+  margin:0;
+  background:#000;
+  color:white;
+  font-family:-apple-system;
+}
+
+/* LOGO */
+.logo{
+  position:fixed;
+  top:20px;
+  left:20px;
+  font-size:26px;
+  font-weight:bold;
+  text-shadow:0 0 10px #fff,0 0 20px #fff;
+}
+
+/* CONTAINER */
+.container{
+  max-width:700px;
+  margin:100px auto;
+  padding:20px;
+}
+
+/* CHAT BOX */
+.chat{
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(25px);
+  border-radius:20px;
+  padding:20px;
+}
+
+/* MESSAGES */
+.messages{
+  min-height:200px;
+  margin-bottom:20px;
+}
+
+.msg{
+  margin:10px 0;
+  padding:10px;
+  border-radius:10px;
+  background:rgba(255,255,255,0.05);
+}
+
+/* INPUT */
+textarea{
+  width:100%;
+  height:80px;
+  background:transparent;
+  border:none;
+  color:white;
+  outline:none;
+  font-size:16px;
+}
+
+/* BUTTON */
+button{
+  width:100%;
+  margin-top:10px;
+  padding:14px;
+  border:none;
+  border-radius:12px;
+  background:rgba(255,255,255,0.1);
+  color:white;
+  backdrop-filter:blur(10px);
+  cursor:pointer;
+  transition:0.3s;
+}
+
+button:hover{
+  box-shadow:0 0 10px #fff,0 0 20px #aaa;
+  transform:scale(1.03);
+}
+
+/* MODAL */
+.modal{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  display:none;
+  justify-content:center;
+  align-items:center;
+  background:rgba(0,0,0,0.8);
+}
+
+.modal-box{
+  background:#111;
+  padding:20px;
+  border-radius:20px;
+  width:300px;
+}
+
+input{
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  background:#222;
+  border:none;
+  color:white;
+}
+
+/* LOADING */
+.loading{
+  opacity:0.5;
+  animation:blink 1s infinite;
+}
+
+@keyframes blink{
+  0%{opacity:0.2;}
+  50%{opacity:1;}
+  100%{opacity:0.2;}
+}
 </style>
 </head>
 
 <body>
 
-<h1>Norepi AI</h1>
+<div class="logo">N</div>
 
-<button onclick="signUp()">Sign Up</button>
-<button onclick="login()">Login</button>
+<div class="container">
+  <div class="chat">
 
-<br>
+    <div class="messages" id="messages"></div>
 
-<textarea id="input"></textarea><br>
-<button onclick="runAI()">Run</button>
+    <textarea id="input" placeholder="Type your message..."></textarea>
+    <button onclick="send()">Send</button>
 
-<p id="output"></p>
+  </div>
+</div>
 
-<div class="lock" id="lock">
-  <h2>Upgrade Required</h2>
-  <button onclick="buy()">Upgrade</button>
+<!-- LOGIN -->
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <h3>Login</h3>
+    <input id="email" placeholder="Email">
+    <input id="password" type="password" placeholder="Password">
+    <button onclick="signUp()">Sign Up</button>
+    <button onclick="login()">Login</button>
+  </div>
 </div>
 
 <script>
 const supabaseClient = supabase.createClient(
-  "SUA_URL",
-  "SUA_KEY"
+  "COLE_SUA_URL_AQUI",
+  "COLE_SUA_KEY_AQUI"
 );
 
 let user = null;
 
-supabaseClient.auth.getSession().then(({ data }) => {
+checkUser();
+
+async function checkUser(){
+  const { data } = await supabaseClient.auth.getSession();
   user = data.session?.user;
-});
+}
 
 async function signUp(){
-  let email = prompt("email");
-  let password = prompt("password");
+  let email = document.getElementById("email").value;
+  let password = document.getElementById("password").value;
+
   await supabaseClient.auth.signUp({email,password});
-  alert("check email");
+  alert("Check your email");
 }
 
 async function login(){
-  let email = prompt("email");
-  let password = prompt("password");
+  let email = document.getElementById("email").value;
+  let password = document.getElementById("password").value;
+
   const { data } = await supabaseClient.auth.signInWithPassword({email,password});
   user = data.user;
-  alert("logged");
+
+  document.getElementById("modal").style.display="none";
 }
 
-async function runAI(){
-  if(!user){ alert("login"); return; }
-
-  let text = document.getElementById("input").value;
-
-  const { data } = await supabaseClient
-    .from("profiles")
-    .select("*")
-    .eq("id", user.id)
-    .single();
-
-  if(!data.pro && data.uses >= 3){
-    document.getElementById("lock").style.display="flex";
+async function send(){
+  if(!user){
+    document.getElementById("modal").style.display="flex";
     return;
   }
 
-  document.getElementById("output").innerText="thinking...";
+  let text = document.getElementById("input").value;
 
-  const res = await fetch("SUA_FUNCTION_URL", {
+  addMessage("You: " + text);
+
+  let loading = addMessage("AI is thinking...");
+  loading.classList.add("loading");
+
+  const res = await fetch("COLE_SUA_FUNCTION_URL_AQUI", {
     method:"POST",
     headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify({text})
+    body: JSON.stringify({ text })
   });
 
   const result = await res.json();
 
-  document.getElementById("output").innerText = result.result;
-
-  await supabaseClient
-    .from("profiles")
-    .update({ uses: data.uses + 1 })
-    .eq("id", user.id);
+  loading.remove();
+  addMessage("AI: " + result.result);
 }
 
-function buy(){
-  window.location.href="SEU_STRIPE_LINK";
+function addMessage(text){
+  let div = document.createElement("div");
+  div.className="msg";
+  div.innerText=text;
+  document.getElementById("messages").appendChild(div);
+  return div;
 }
 </script>
 
