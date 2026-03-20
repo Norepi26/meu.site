@@ -2,9 +2,15 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Norepi</title>
-
+<title>Norepi AI</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+<style>
+body {background:#000;color:white;text-align:center;font-family:sans-serif;}
+textarea {width:80%;height:120px;background:#111;color:white;border:none;}
+button {margin-top:10px;padding:12px;background:linear-gradient(red,orange);border:none;color:white;}
+.lock {position:fixed;top:0;left:0;width:100%;height:100%;background:black;display:none;justify-content:center;align-items:center;flex-direction:column;}
+</style>
 </head>
 
 <body>
@@ -14,47 +20,47 @@
 <button onclick="signUp()">Sign Up</button>
 <button onclick="login()">Login</button>
 
-<br><br>
+<br>
 
 <textarea id="input"></textarea><br>
-<button onclick="improve()">Run AI</button>
+<button onclick="runAI()">Run</button>
 
 <p id="output"></p>
 
+<div class="lock" id="lock">
+  <h2>Upgrade Required</h2>
+  <button onclick="buy()">Upgrade</button>
+</div>
+
 <script>
 const supabaseClient = supabase.createClient(
-  "COLE_SUA_URL",
-  "COLE_SUA_KEY"
+  "SUA_URL",
+  "SUA_KEY"
 );
 
 let user = null;
 
-async function signUp() {
-  let email = prompt("Email:");
-  let password = prompt("Password:");
+supabaseClient.auth.getSession().then(({ data }) => {
+  user = data.session?.user;
+});
 
-  await supabaseClient.auth.signUp({ email, password });
-  alert("Check email");
+async function signUp(){
+  let email = prompt("email");
+  let password = prompt("password");
+  await supabaseClient.auth.signUp({email,password});
+  alert("check email");
 }
 
-async function login() {
-  let email = prompt("Email:");
-  let password = prompt("Password:");
-
-  const { data } = await supabaseClient.auth.signInWithPassword({
-    email, password
-  });
-
+async function login(){
+  let email = prompt("email");
+  let password = prompt("password");
+  const { data } = await supabaseClient.auth.signInWithPassword({email,password});
   user = data.user;
-
-  alert("Logged in");
+  alert("logged");
 }
 
-async function improve() {
-  if (!user) {
-    alert("Login first");
-    return;
-  }
+async function runAI(){
+  if(!user){ alert("login"); return; }
 
   let text = document.getElementById("input").value;
 
@@ -64,18 +70,31 @@ async function improve() {
     .eq("id", user.id)
     .single();
 
-  if (!data.pro && data.uses >= 3) {
-    alert("Pay to continue");
+  if(!data.pro && data.uses >= 3){
+    document.getElementById("lock").style.display="flex";
     return;
   }
 
-  document.getElementById("output").innerText =
-    "Improved: " + text;
+  document.getElementById("output").innerText="thinking...";
+
+  const res = await fetch("SUA_FUNCTION_URL", {
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({text})
+  });
+
+  const result = await res.json();
+
+  document.getElementById("output").innerText = result.result;
 
   await supabaseClient
     .from("profiles")
     .update({ uses: data.uses + 1 })
     .eq("id", user.id);
+}
+
+function buy(){
+  window.location.href="SEU_STRIPE_LINK";
 }
 </script>
 
